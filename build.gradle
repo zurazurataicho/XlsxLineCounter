@@ -6,32 +6,34 @@ plugins {
 mainClassName = 'org.zura.XlsxLineCounter.Main'
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
     // https://mvnrepository.com/artifact/org.apache.poi/poi
-    compile group: 'org.apache.poi', name: 'poi', version: '4.0.0'
+    implementation 'org.apache.poi:poi:4.0.0'
     // https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
-    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.0.0'
+    implementation 'org.apache.poi:poi-ooxml:4.0.0'
     // https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml-schemas
-    compile group: 'org.apache.poi', name: 'poi-ooxml-schemas', version: '4.0.0'
+    implementation 'org.apache.poi:poi-ooxml-schemas:4.0.0'
     // https://mvnrepository.com/artifact/org.apache.poi/poi-scratchpad
-	compile group: 'org.apache.poi', name: 'poi-scratchpad', version: '4.0.0'
+    implementation 'org.apache.poi:poi-scratchpad:4.0.0'
 }
 
 run {
-	// https://qiita.com/opengl-8080/items/4c1aa85b4737bd362d9e
-	// gradle run -Pargs="hoge fuga piyo"
-	if (project.hasProperty('args')) {
-		args project.args.split('\\s+')
-	}
+    // https://qiita.com/opengl-8080/items/4c1aa85b4737bd362d9e
+    // gradle run -Pargs="hoge fuga piyo"
+    if (project.hasProperty('args')) {
+        args project.args.split('\\s+')
+    }
 }
 
+configurations.implementation.setCanBeResolved(true)
 jar {
-	// java -jar build/libs/JournalFilter.jar xxx yyy
+    // java -jar build/libs/JournalFilter.jar xxx yyy
     manifest {
         attributes 'Main-Class': mainClassName
     }
-	from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    from configurations.implementation.collect { it.isDirectory() ? it : zipTree(it) }
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
 }
